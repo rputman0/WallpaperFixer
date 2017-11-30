@@ -1,35 +1,30 @@
-import os,pygame
+import os,pygame,send2trash
 
-#get the current username and path
-username = "username"
-os.chdir("C:\\Users\\" + username + "\\Documents\\Wallpapers")
+#username = os.getenv('USERNAME')
+os.chdir("C:\\Users\\Von\\Desktop\\")
 items = os.listdir(os.getcwd())
+removeTotal = keptTotal = errorTotal = 0
 
-removeTotal = 0
-keptTotal = 0
-errorTotal = 0
+print( os.getcwd() + " dir has " + str(len(items)-1) + " items\n")
 
-#for every item in the directory
-#if it is not a png or not 1920x1080, remove it
-#otherwise keep the image
 for i in range(0,len(items)):
     try:
         fileName = items[i]
         img = pygame.image.load(fileName)
-        if(fileName[len(fileName)-3:] != "png"):
-            os.remove(fileName)
+        if(items[i].endswith('jpg')):
+            send2trash.send2trash(fileName)
             removeTotal += 1
             print("Remove: " + fileName + " " + str(i) + '/' + str(len(items)-1))
         elif(img.get_width() == 1920 and img.get_height() == 1080):
-            print("Keep: " + fileName + " " + str(i) + '/' + str(len(items)-1))
+            print("Kept: " + fileName + " " + str(i) + '/' + str(len(items)-1))
             keptTotal += 1
-        else:
-            os.remove(fileName)
+    except:
+        if(items[i].endswith("webm")):
+            send2trash.send2trash(fileName)
             removeTotal += 1
             print("Remove: " + fileName + " " + str(i) + '/' + str(len(items)-1))
-    except:
         errorTotal += 1
-        print("ERROR: " + items[i])
+        print("Error: " + fileName + " " + str(i) + '/' + str(len(items)-1))
             
 print("Total Removed: ", removeTotal)
 print("Total Kept: ", keptTotal)
